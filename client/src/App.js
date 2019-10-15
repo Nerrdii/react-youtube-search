@@ -1,13 +1,9 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
-import YTSearch from 'youtube-api-search';
+import axios from 'axios';
 import _ from 'lodash';
-
 import SearchBar from './components/SearchBar';
 import VideoDetail from './components/VideoDetail';
 import VideoList from './components/VideoList';
-
-const API_KEY = 'AIzaSyBtymTxJJePPDv3ep8JWS54o1U3RPhDukE';
 
 class App extends Component {
   constructor(props) {
@@ -22,13 +18,12 @@ class App extends Component {
   }
 
   videoSearch(term) {
-    YTSearch(
-      {
-        term,
-        key: API_KEY
-      },
-      videos => this.setState({ videos, selectedVideo: videos[0] })
-    );
+    axios.get(`/search/${term}`).then(videos => {
+      this.setState({
+        videos: videos.data.items,
+        selectedVideo: videos.data.items[0]
+      });
+    });
   }
 
   render() {
@@ -49,4 +44,4 @@ class App extends Component {
   }
 }
 
-ReactDOM.render(<App />, document.querySelector('.container'));
+export default App;
