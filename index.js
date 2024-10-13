@@ -1,7 +1,8 @@
-const express = require('express');
-const fetch = require('node-fetch');
+import express, { static as expressStatic } from 'express';
+import fetch from 'node-fetch';
+import { config } from 'dotenv';
 
-require('dotenv').config();
+config();
 
 const app = express();
 
@@ -13,12 +14,12 @@ app.get('/search/:term', (req, res) => {
   const part = 'snippet';
 
   fetch(`${BASE_URL}?part=${part}&q=${searchTerm}&key=${API_KEY}`)
-    .then(resp => resp.json())
-    .then(data => res.json(data));
+    .then((resp) => resp.json())
+    .then((data) => res.json(data));
 });
 
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static('client/build'));
+  app.use(expressStatic('client/build'));
 
   const path = require('path');
   app.get('*', (req, res) => {
